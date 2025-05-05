@@ -57,11 +57,13 @@ export const searchProducts = async (req: Request, res: Response<ApiResponse<Pag
       success: true,
       message: messages.success.productsRetrieved,
       data: {
-        total,
-        perPage: Number(limit),
-        currentPage: Number(page),
-        totalPages,
-        data: products
+        pagination: {
+          total,
+          perPage: Number(limit),
+          currentPage: Number(page),
+          totalPages
+        },
+        products
       }
     });
   } catch (error: any) {

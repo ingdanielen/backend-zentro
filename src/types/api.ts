@@ -5,12 +5,16 @@ export interface PaginationParams {
   limit: number;
 }
 
-export interface PaginatedResponse<T> {
+export interface PaginationInfo {
   total: number;
   perPage: number;
   currentPage: number;
   totalPages: number;
-  data: T[];
+}
+
+export interface PaginatedResponse<T> {
+  pagination: PaginationInfo;
+  products: T[];
 }
 
 export interface ApiResponse<T> {
