@@ -4,8 +4,11 @@ const messages = {
         userUpdated: "User updated successfully",
         userDeleted: "User deleted successfully",
         productCreated: "Product created successfully",
+        productUpdated: "Product updated successfully",
         productRetrieved: "Product retrieved successfully",
         productsRetrieved: "Products retrieved successfully",
+        parametersRetrieved: "Parameters retrieved successfully",
+        parameterUpdated: "Parameter updated successfully"
     },
     error: {
         userNotFound: "User not found",
@@ -13,14 +16,18 @@ const messages = {
         userNotDeleted: "User not deleted",
         productNotFound: "Product not found",
         productNotCreated: "Error creating product",
+        productNotUpdated: "Error updating product",
         productNotRetrieved: "Error retrieving product",
         productsNotRetrieved: "Error retrieving products",
         invalidProductData: "Invalid product data",
+        parametersNotRetrieved: "Error retrieving parameters",
+        parameterNotUpdated: "Error updating parameter"
     },
     validation: {
         userInvalid: "User invalid",
         productInvalid: "Product data is invalid",
         invalidSearchParams: "Invalid search parameters",
+        parameterInvalid: "Invalid parameter data"
     },
     auth: {
         tokenInvalid: "Token invalid",

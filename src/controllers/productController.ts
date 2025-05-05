@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Product, { IProduct } from '../models/Product';
 import { ApiResponse, PaginatedResponse, SearchQuery } from '../types/api';
 import messages from '../constants/messages';
+import Parameter from '../models/Parameter';
 
 export const searchProducts = async (req: Request, res: Response<ApiResponse<PaginatedResponse<IProduct>>>) => {
   try {
@@ -110,6 +111,32 @@ export const createProduct = async (req: Request, res: Response<ApiResponse<IPro
     const product = new Product(req.body);
     await product.save();
 
+    // Update parameters
+    await Promise.all([
+      Parameter.findOneAndUpdate(
+        { type: 'category', name: product.category },
+        { 
+          $inc: { count: 1 },
+          lastUsed: new Date()
+        },
+        { 
+          upsert: true,
+          new: true
+        }
+      ),
+      Parameter.findOneAndUpdate(
+        { type: 'brand', name: product.brand },
+        { 
+          $inc: { count: 1 },
+          lastUsed: new Date()
+        },
+        { 
+          upsert: true,
+          new: true
+        }
+      )
+    ]);
+
     res.status(201).json({
       success: true,
       message: messages.success.productCreated,
@@ -120,6 +147,69 @@ export const createProduct = async (req: Request, res: Response<ApiResponse<IPro
     res.status(500).json({
       success: false,
       message: messages.error.productNotCreated,
+      data: null,
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+export const updateProduct = async (req: Request, res: Response<ApiResponse<IProduct>>) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { ...updateData, updatedAt: new Date() },
+      { new: true, runValidators: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: messages.error.productNotFound,
+        data: null
+      });
+    }
+
+    // Update parameters if category or brand changed
+    if (updateData.category || updateData.brand) {
+      await Promise.all([
+        updateData.category && Parameter.findOneAndUpdate(
+          { type: 'category', name: updateData.category },
+          { 
+            $inc: { count: 1 },
+            lastUsed: new Date()
+          },
+          { 
+            upsert: true,
+            new: true
+          }
+        ),
+        updateData.brand && Parameter.findOneAndUpdate(
+          { type: 'brand', name: updateData.brand },
+          { 
+            $inc: { count: 1 },
+            lastUsed: new Date()
+          },
+          { 
+            upsert: true,
+            new: true
+          }
+        )
+      ].filter(Boolean));
+    }
+
+    res.json({
+      success: true,
+      message: messages.success.productUpdated,
+      data: product
+    });
+  } catch (error: any) {
+    console.error('Error in updateProduct:', error);
+    res.status(500).json({
+      success: false,
+      message: messages.error.productNotUpdated,
       data: null,
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
