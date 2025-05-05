@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database';
 import productRoutes from './routes/productRoutes';
+import parameterRoutes from './routes/parameterRoutes';
 import { seedProducts } from './seeds/productSeeds';
 
 // Load environment variables
@@ -22,6 +23,7 @@ connectDB().then(() => {
 
 // Routes
 app.use('/api', productRoutes);
+app.use('/api', parameterRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
