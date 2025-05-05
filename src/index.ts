@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database';
 import productRoutes from './routes/productRoutes';
+import { seedProducts } from './seeds/productSeeds';
 
 // Load environment variables
 dotenv.config();
@@ -14,7 +15,10 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-connectDB();
+connectDB().then(() => {
+  // Seed initial products
+  seedProducts();
+});
 
 // Routes
 app.use('/api', productRoutes);
@@ -25,13 +29,13 @@ app.get('/', (req, res) => {
 });
 
 // Error handling middleware
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err.stack);
   res.status(500).json({
     success: false,
-    message: 'Internal server error',
+    message: 'Something went wrong!',
     data: null,
-    error: err.message
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
 
