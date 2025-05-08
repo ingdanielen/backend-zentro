@@ -1,9 +1,16 @@
+/**
+ * Controlador para la gestión de parámetros del sistema
+ * Este archivo contiene la lógica para manejar las operaciones relacionadas
+ * con los parámetros del sistema, como categorías y marcas.
+ */
+
 import { Request, Response } from 'express';
 import Parameter, { IParameter } from '../models/Parameter';
 import Product from '../models/Product';
 import { ApiResponse } from '../types/api';
 import messages from '../constants/messages';
 
+// Tipo para las estadísticas de parámetros
 type ParameterStats = {
   type: 'category' | 'brand';
   name: string;
@@ -16,32 +23,38 @@ type ParameterStats = {
   updatedAt: Date;
 };
 
+// Tipo para parámetros de búsqueda
 type SearchParameter = {
   name: string;
   count: number;
   totalProducts: number;
 };
 
+/**
+ * Obtiene todos los parámetros o los filtra por tipo
+ * @param req - Request de Express
+ * @param res - Response de Express
+ */
 export const getParameters = async (req: Request, res: Response<ApiResponse<ParameterStats[]>>) => {
   try {
     const { type } = req.query;
     const query = type ? { type } : {};
 
-    // Get parameters with basic stats
+    // Obtener parámetros con estadísticas básicas
     const parameters = await Parameter.find(query).sort({ count: -1 });
 
-    // Get additional statistics
+    // Obtener estadísticas adicionales
     const stats = await Promise.all(parameters.map(async (param) => {
       const products = await Product.find({ [param.type]: param.name });
       
-      // Calculate statistics
+      // Calcular estadísticas
       const totalProducts = products.length;
       const totalStock = products.reduce((sum, product) => sum + (product.stock || 0), 0);
       const averagePrice = products.length > 0 
         ? products.reduce((sum, product) => sum + (product.price || 0), 0) / products.length 
         : 0;
 
-      // Update parameter with new stats
+      // Actualizar parámetro con nuevas estadísticas
       await Parameter.findByIdAndUpdate(param._id, {
         totalProducts,
         totalStock,
@@ -62,7 +75,7 @@ export const getParameters = async (req: Request, res: Response<ApiResponse<Para
       data: stats
     });
   } catch (error: any) {
-    console.error('Error in getParameters:', error);
+    console.error('Error en getParameters:', error);
     res.status(500).json({
       success: false,
       message: messages.error.parametersNotRetrieved,
@@ -72,11 +85,16 @@ export const getParameters = async (req: Request, res: Response<ApiResponse<Para
   }
 };
 
+/**
+ * Actualiza el conteo y estadísticas de un parámetro
+ * @param req - Request de Express
+ * @param res - Response de Express
+ */
 export const updateParameter = async (req: Request, res: Response<ApiResponse<IParameter>>) => {
   try {
     const { type, name } = req.body;
 
-    // Get current product stats
+    // Obtener estadísticas actuales del producto
     const products = await Product.find({ [type]: name });
     const totalProducts = products.length;
     const totalStock = products.reduce((sum, product) => sum + (product.stock || 0), 0);
@@ -105,7 +123,7 @@ export const updateParameter = async (req: Request, res: Response<ApiResponse<IP
       data: parameter
     });
   } catch (error: any) {
-    console.error('Error in updateParameter:', error);
+    console.error('Error en updateParameter:', error);
     res.status(500).json({
       success: false,
       message: messages.error.parameterNotUpdated,
@@ -115,6 +133,11 @@ export const updateParameter = async (req: Request, res: Response<ApiResponse<IP
   }
 };
 
+/**
+ * Obtiene parámetros para búsqueda (categorías y marcas)
+ * @param req - Request de Express
+ * @param res - Response de Express
+ */
 export const getSearchParameters = async (req: Request, res: Response<ApiResponse<{ categories: SearchParameter[], brands: SearchParameter[] }>>) => {
   try {
     const [categories, brands] = await Promise.all([
@@ -143,7 +166,7 @@ export const getSearchParameters = async (req: Request, res: Response<ApiRespons
       }
     });
   } catch (error: any) {
-    console.error('Error in getSearchParameters:', error);
+    console.error('Error en getSearchParameters:', error);
     res.status(500).json({
       success: false,
       message: messages.error.parametersNotRetrieved,

@@ -20,7 +20,7 @@ export const searchProducts = async (req: Request, res: Response<ApiResponse<Pag
         { brand: { $regex: q, $options: 'i' } },
         { category: { $regex: q, $options: 'i' } }
       ];
-    }
+    } 
 
     // Specific field searches
     if (category) query.category = category;
@@ -58,13 +58,11 @@ export const searchProducts = async (req: Request, res: Response<ApiResponse<Pag
       success: true,
       message: messages.success.productsRetrieved,
       data: {
-        pagination: {
-          total,
-          perPage: Number(limit),
-          currentPage: Number(page),
-          totalPages
-        },
-        products
+        items: products,
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages
       }
     });
   } catch (error: any) {

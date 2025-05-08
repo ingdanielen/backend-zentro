@@ -1,15 +1,21 @@
-import { Router } from 'express';
+/**
+ * Rutas para la gestión de parámetros del sistema
+ * Este archivo define las rutas relacionadas con los parámetros del sistema,
+ * como categorías y marcas, incluyendo su obtención y actualización.
+ */
+
+import { Router, RequestHandler } from 'express';
 import { getParameters, updateParameter, getSearchParameters } from '../controllers/parameterController';
 
 const router = Router();
 
-// Get all parameters or filter by type
-router.get('/parameters', getParameters);
+// Obtener todos los parámetros o filtrar por tipo
+router.get('/parameters', getParameters as RequestHandler);
 
-// Get parameters for search (categories and brands)
-router.get('/search', getSearchParameters);
+// Obtener parámetros para búsqueda (categorías y marcas)
+router.get('/search', getSearchParameters as RequestHandler);
 
-// Update parameter count
-router.post('/parameters/update', updateParameter);
+// Actualizar conteo de parámetros
+router.post('/parameters/update', updateParameter as RequestHandler);
 
 export default router;

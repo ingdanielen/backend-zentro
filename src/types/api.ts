@@ -13,15 +13,18 @@ export interface PaginationInfo {
 }
 
 export interface PaginatedResponse<T> {
-  pagination: PaginationInfo;
-  products: T[];
+  items: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
   data: T | null;
-  error?: string | null;
+  error?: string;
 }
 
 export interface SearchQuery {
@@ -32,4 +35,5 @@ export interface SearchQuery {
   brand?: string;
   minPrice?: number;
   maxPrice?: number;
+  [key: string]: any;
 } 

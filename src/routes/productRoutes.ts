@@ -1,18 +1,33 @@
+/**
+ * Rutas para la gestión de productos
+ * Este archivo define las rutas relacionadas con los productos,
+ * incluyendo búsqueda, creación, actualización y obtención por ID.
+ */
+
 import { RequestHandler, Router } from 'express';
-import { searchProducts, getProductById, createProduct, updateProduct } from '../controllers/productController';
+import { searchProducts, createProduct, updateProduct, getProductById } from '../controllers/productController';
+import { validateProduct } from '../middleware/validationMiddleware';
+import { authenticateToken, isAdmin } from '../middleware/authMiddleware';
 
 const router = Router();
 
-// Search products
+// Rutas públicas (no requieren autenticación)
 router.get('/items', searchProducts as RequestHandler);
-
-// Get product by ID
 router.get('/items/:id', getProductById as RequestHandler);
 
-// Create product
-router.post('/items', createProduct as RequestHandler);
+// Rutas protegidas (requieren autenticación y rol de admin)
+router.post('/items', 
+  authenticateToken as RequestHandler,
+  isAdmin as RequestHandler,
+  validateProduct as RequestHandler, 
+  createProduct as RequestHandler
+);
 
-// Update product
-router.put('/items/:id', updateProduct as RequestHandler);
+router.put('/items/:id', 
+  authenticateToken as RequestHandler,
+  isAdmin as RequestHandler,
+  validateProduct as RequestHandler, 
+  updateProduct as RequestHandler
+);
 
 export default router; 
