@@ -8,10 +8,14 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 export const login = async (req: Request, res: Response<ApiResponse<any>>) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt for email:', email);
 
     // Find user by email
     const user = await User.findOne({ email });
+    console.log('User found:', user ? 'Yes' : 'No');
+
     if (!user) {
+      console.log('No user found with email:', email);
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials',
@@ -21,7 +25,10 @@ export const login = async (req: Request, res: Response<ApiResponse<any>>) => {
 
     // Check password
     const isMatch = await user.comparePassword(password);
+    console.log('Password match:', isMatch ? 'Yes' : 'No');
+
     if (!isMatch) {
+      console.log('Password does not match for user:', email);
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials',
