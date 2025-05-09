@@ -17,15 +17,16 @@ const userSeeds = [
 
 export const seedUsers = async () => {
   try {
-    // Check if users already exist
-    const count = await User.countDocuments();
-    if (count === 0) {
-      await User.insertMany(userSeeds);
-      console.log('Users creados exitosamente');
-    } else {
-      console.log('La base de datos ya contiene usuarios');
+    // Create or update users
+    for (const userData of userSeeds) {
+      await User.findOneAndUpdate(
+        { email: userData.email },
+        userData,
+        { upsert: true, new: true }
+      );
     }
+    console.log('Users creados/actualizados exitosamente');
   } catch (error) {
-    console.error('Error al crear usuarios:', error);
+    console.error('Error al crear/actualizar usuarios:', error);
   }
 }; 

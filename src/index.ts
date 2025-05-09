@@ -24,10 +24,14 @@ app.use(cors()); // Habilitar CORS para todas las rutas
 app.use(express.json()); // Parsear JSON en las peticiones
 
 // Connect to MongoDB
-connectDB().then(() => {
+connectDB().then(async () => {
   // Seed initial data
-  seedProducts();
-  seedUsers();
+  await seedProducts();
+  await seedUsers();
+  console.log('Initial data seeded successfully');
+}).catch(error => {
+  console.error('Error during initialization:', error);
+  process.exit(1);
 });
 
 // Routes
