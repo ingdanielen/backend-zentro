@@ -11,12 +11,6 @@ if (!MONGODB_URI) {
   process.exit(1);
 }
 
-// Ensure the connection string starts with mongodb:// or mongodb+srv://
-if (!MONGODB_URI.startsWith('mongodb://') && !MONGODB_URI.startsWith('mongodb+srv://')) {
-  console.error('Invalid MongoDB connection string format');
-  process.exit(1);
-}
-
 export const connectDB = async () => {
   try {
     await mongoose.connect(MONGODB_URI);
