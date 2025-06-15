@@ -11,9 +11,7 @@ services:
       - key: PORT
         value: 10000
       - key: MONGODB_URI
-        fromDatabase:
-          name: zentro-mongodb
-          property: connectionString
+        value: mongodb+srv://zentro_user:${DB_PASSWORD}@zentro-mongodb.${DB_HOST}/zentro
 
 databases:
   - name: zentro-mongodb
