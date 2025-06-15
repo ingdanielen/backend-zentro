@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 import messages from '../constants/messages';
 dotenv.config();
 
-// Use Railway's MongoDB connection URL
-const MONGODB_URI = process.env.MONGO_URL || 'mongodb://localhost:27017/zentro';
+// Use Render's MongoDB connection URL
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/zentro';
 
 export const connectDB = async () => {
   try {
