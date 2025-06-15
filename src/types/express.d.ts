@@ -14,10 +14,10 @@ declare global {
       headers: any;
     }
 
-    interface Response {
-      status(code: number): this;
-      json(body: any): this;
-      send(body: any): this;
+    interface Response<T = any> {
+      status(code: number): Response<T>;
+      json(body: T): Response<T>;
+      send(body: T): Response<T>;
     }
 
     interface NextFunction {
@@ -39,10 +39,10 @@ declare module 'express' {
     headers: any;
   }
   
-  export interface Response {
-    status(code: number): this;
-    json(body: any): this;
-    send(body: any): this;
+  export interface Response<T = any> {
+    status(code: number): Response<T>;
+    json(body: T): Response<T>;
+    send(body: T): Response<T>;
   }
   
   export interface NextFunction {
