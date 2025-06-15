@@ -4,13 +4,13 @@
  * y registra todas las rutas de la API.
  */
 
-import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import express, { NextFunction, Request, Response, json, urlencoded } from 'express';
 import { connectDB } from './config/database';
-import productRoutes from './routes/productRoutes';
-import parameterRoutes from './routes/parameterRoutes';
 import authRoutes from './routes/authRoutes';
+import parameterRoutes from './routes/parameterRoutes';
+import productRoutes from './routes/productRoutes';
 import { seedProducts } from './seeds/productSeeds';
 import { seedUsers } from './seeds/userSeeds';
 
@@ -21,7 +21,8 @@ const app = express();
 
 // Middleware
 app.use(cors()); // Habilitar CORS para todas las rutas
-app.use(express.json()); // Parsear JSON en las peticiones
+app.use(json()); // Parsear JSON en las peticiones
+app.use(urlencoded({ extended: true })); // Parsear URL-encoded en las peticiones
 
 // Connect to MongoDB
 connectDB().then(async () => {
@@ -40,12 +41,12 @@ app.use('/api', parameterRoutes);
 app.use('/api/auth', authRoutes);
 
 // Basic route
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response ) => {
   res.json({ message: 'Welcome to Zentro API' });
 });
 
 // Error handling middleware
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({
     success: false,
@@ -57,6 +58,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(Number(PORT), () => {
   console.log(`Server is running on port ${PORT}`);
 }); 
