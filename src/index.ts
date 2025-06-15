@@ -19,25 +19,17 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.append('Access-Control-Allow-Origin', 'https://zentro-woad.vercel.app');
-  res.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.append('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
-  res.append('Access-Control-Allow-Credentials', 'true');
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(204).send('');
-  }
-  next();
-});
-
-app.use(cors({
+// CORS configuration
+const corsOptions = {
   origin: 'https://zentro-woad.vercel.app',
-  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
 
 app.use(json()); // Parsear JSON en las peticiones
 app.use(urlencoded({ extended: true })); // Parsear URL-encoded en las peticiones
