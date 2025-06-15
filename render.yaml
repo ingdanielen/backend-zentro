@@ -19,4 +19,5 @@ databases:
   - name: zentro-mongodb
     databaseName: zentro
     plan: free
-    user: zentro_user 
+    user: zentro_user
+    region: oregon 
