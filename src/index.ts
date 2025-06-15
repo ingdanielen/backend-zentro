@@ -21,10 +21,10 @@ const app = express();
 
 // Middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://zentro-woad.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.append('Access-Control-Allow-Origin', 'https://zentro-woad.vercel.app');
+  res.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.append('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.append('Access-Control-Allow-Credentials', 'true');
   
   if (req.method === 'OPTIONS') {
     return res.status(204).send('');
