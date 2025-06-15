@@ -4,7 +4,18 @@ import messages from '../constants/messages';
 dotenv.config();
 
 // Use Render's MongoDB connection URL
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/zentro';
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('MONGODB_URI is not defined in environment variables');
+  process.exit(1);
+}
+
+// Ensure the connection string starts with mongodb:// or mongodb+srv://
+if (!MONGODB_URI.startsWith('mongodb://') && !MONGODB_URI.startsWith('mongodb+srv://')) {
+  console.error('Invalid MongoDB connection string format');
+  process.exit(1);
+}
 
 export const connectDB = async () => {
   try {

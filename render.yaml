@@ -19,5 +19,4 @@ databases:
   - name: zentro-mongodb
     databaseName: zentro
     plan: free
-    ipAllowList: []
     user: zentro_user 
