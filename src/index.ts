@@ -20,7 +20,12 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors()); // Habilitar CORS para todas las rutas
+app.use(cors({
+  origin: ['https://zentro-woad.vercel.app', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(json()); // Parsear JSON en las peticiones
 app.use(urlencoded({ extended: true })); // Parsear URL-encoded en las peticiones
 
