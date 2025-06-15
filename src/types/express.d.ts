@@ -3,20 +3,50 @@ import { JwtPayload } from 'jsonwebtoken';
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload;
+      user?: {
+        userId: string;
+        email: string;
+        role: string;
+      };
+      body: any;
+      params: any;
+      query: any;
+      headers: any;
+    }
+
+    interface Response {
+      status(code: number): this;
+      json(body: any): this;
+      send(body: any): this;
+    }
+
+    interface NextFunction {
+      (err?: any): void;
     }
   }
 }
 
 declare module 'express' {
   export interface Request {
-    user?: JwtPayload;
+    user?: {
+      userId: string;
+      email: string;
+      role: string;
+    };
+    body: any;
+    params: any;
+    query: any;
+    headers: any;
   }
   
   export interface Response {
     status(code: number): this;
     json(body: any): this;
     send(body: any): this;
+  }
+  
+  export interface NextFunction {
+    (err?: any): void;
   }
   
   export interface Application {
@@ -39,7 +69,7 @@ declare module 'express' {
   }
   
   export interface RequestHandler {
-    (req: Request, res: Response, next: Function): void;
+    (req: Request, res: Response, next: NextFunction): void;
   }
   
   export function Router(): Router;
