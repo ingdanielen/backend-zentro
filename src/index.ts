@@ -35,13 +35,14 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
 // Manual CORS headers middleware
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, res: Response, next: NextFunction): void => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   if (req.method === 'OPTIONS') {
-    return res.status(204).send('OK');
+    res.status(204).send('OK');
+    return;
   }
   next();
 });
