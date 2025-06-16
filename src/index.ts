@@ -21,7 +21,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://zentro-woad.vercel.app', 'http://localhost:3000', 'zentro-woad.vercel.app'],
+  origin: ['https://zentro-woad.vercel.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   credentials: true,
@@ -30,22 +30,6 @@ const corsOptions = {
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
-
-// Handle preflight requests for all routes
-app.options('*', cors(corsOptions));
-
-// Manual CORS headers middleware
-app.use((req: Request, res: Response, next: NextFunction): void => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  if (req.method === 'OPTIONS') {
-    res.status(204).send('OK');
-    return;
-  }
-  next();
-});
 
 app.use(json()); // Parsear JSON en las peticiones
 app.use(urlencoded({ extended: true })); // Parsear URL-encoded en las peticiones
@@ -62,8 +46,8 @@ connectDB().then(async () => {
 });
 
 // Routes
-app.use('/api', productRoutes);
-app.use('/api', parameterRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/parameters', parameterRoutes);
 app.use('/api/auth', authRoutes);
 
 // Basic route
