@@ -21,7 +21,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://zentro-woad.vercel.app', 'http://localhost:3000', 'zentro-woad.vercel.app', '*'],
+  origin: ['https://zentro-woad.vercel.app', 'http://localhost:3000', 'zentro-woad.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   credentials: true,
