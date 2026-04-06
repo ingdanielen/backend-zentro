@@ -63,14 +63,26 @@ app.get('/', (_req: Request, res: Response) => {
   res.json({ message: 'Welcome to Zentro API' });
 });
 
+function shouldExposeErrorMessage(message: string): boolean {
+  if (process.env.NODE_ENV === 'development') return true;
+  if (process.env.EXPOSE_ERROR_DETAILS === 'true') return true;
+  // Errores de configuración / conexión: útiles en producción sin filtrar datos sensibles
+  if (message.includes('MONGODB_URI')) return true;
+  if (/mongo/i.test(message) && /connect|network|timeout|IP|whitelist|authentication/i.test(message)) {
+    return true;
+  }
+  return false;
+}
+
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err instanceof Error ? err.stack : err);
   const message = err instanceof Error ? err.message : 'Something went wrong!';
+  const expose = shouldExposeErrorMessage(message);
   res.status(500).json({
     success: false,
-    message: 'Something went wrong!',
+    message: expose ? message : 'Something went wrong!',
     data: null,
-    error: process.env.NODE_ENV === 'development' ? message : undefined,
+    error: expose ? message : undefined,
   });
 });
 
