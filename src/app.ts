@@ -55,7 +55,7 @@ app.use(async (_req: Request, _res: Response, next: NextFunction) => {
   }
 });
 
-app.use('/api/products', productRoutes);
+app.use('/api', productRoutes);
 app.use('/api/parameters', parameterRoutes);
 app.use('/api/auth', authRoutes);
 
