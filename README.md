@@ -12,7 +12,9 @@ zentro-backend/
 │   ├── lib/           # Funciones de utilidad y código compartido
 │   ├── models/        # Modelos de base de datos
 │   ├── routes/        # Rutas de la API
-│   └── index.ts       # Punto de entrada de la aplicación
+│   ├── app.ts         # App Express (Vercel: export default)
+│   ├── server.ts      # Servidor local / Railway (listen + seeds)
+│   └── scripts/       # Utilidades (p. ej. seeds en producción)
 ├── .env               # Variables de entorno
 ├── package.json       # Dependencias y scripts del proyecto
 └── tsconfig.json     # Configuración de TypeScript
